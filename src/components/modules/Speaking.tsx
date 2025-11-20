@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { type CharacterData } from '../../data/curriculum';
 import styles from './Speaking.module.scss';
 import { Mic, CheckCircle, XCircle } from 'lucide-react';
+import { AnimatedButton } from '../ui/AnimatedButton';
 
 interface SpeakingProps {
     character: CharacterData;
@@ -88,13 +89,14 @@ export const Speaking: React.FC<SpeakingProps> = ({ character, onComplete }) => 
                 </div>
             </div>
 
-            <button
+            <AnimatedButton
                 className={`${styles.micButton} ${isListening ? styles.listening : ''}`}
                 onClick={startListening}
                 disabled={feedback === 'correct'}
+                variant="accent"
             >
                 <Mic size={48} color="white" />
-            </button>
+            </AnimatedButton>
 
             {isListening && <p className={styles.statusText}>Listening...</p>}
         </div>

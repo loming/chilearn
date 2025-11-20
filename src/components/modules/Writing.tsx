@@ -3,6 +3,7 @@ import HanziWriter from 'hanzi-writer';
 import { type CharacterData } from '../../data/curriculum';
 import styles from './Writing.module.scss';
 import { Pencil, RefreshCw, ArrowRight } from 'lucide-react';
+import { AnimatedButton } from '../ui/AnimatedButton';
 
 interface WritingProps {
     character: CharacterData;
@@ -71,9 +72,9 @@ export const Writing: React.FC<WritingProps> = ({ character, onComplete }) => {
             <div className={styles.header}>
                 <h2 className={styles.title}>Write: {character.char}</h2>
                 <div className={styles.controls}>
-                    <button className={styles.iconButton} onClick={animate} title="Show Stroke Order">
+                    <AnimatedButton className={styles.iconButton} onClick={animate} title="Show Stroke Order" variant="secondary">
                         <RefreshCw size={24} color="#3A0CA3" />
-                    </button>
+                    </AnimatedButton>
                 </div>
             </div>
 
@@ -85,10 +86,10 @@ export const Writing: React.FC<WritingProps> = ({ character, onComplete }) => {
             </div>
 
             {isComplete ? (
-                <button className={styles.nextButton} onClick={onComplete}>
+                <AnimatedButton className={styles.nextButton} onClick={onComplete} variant="primary">
                     <span>Great Job!</span>
                     <ArrowRight size={24} />
-                </button>
+                </AnimatedButton>
             ) : (
                 <p className={styles.instruction}>Trace the strokes!</p>
             )}

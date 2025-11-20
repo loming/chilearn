@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { type CharacterData } from '../../data/curriculum';
 import styles from './Listening.module.scss';
 import { Volume2, ArrowRight } from 'lucide-react';
+import { AnimatedButton } from '../ui/AnimatedButton';
 
 interface ListeningProps {
     character: CharacterData;
@@ -32,15 +33,15 @@ export const Listening: React.FC<ListeningProps> = ({ character, onComplete }) =
                 <p className={styles.pinyin}>{character.pinyin}</p>
                 <p className={styles.meaning}>{character.meaning}</p>
 
-                <button className={styles.playButton} onClick={playAudio}>
+                <AnimatedButton className={styles.playButton} onClick={playAudio} variant="secondary">
                     <Volume2 size={48} color="white" />
-                </button>
+                </AnimatedButton>
             </div>
 
-            <button className={styles.nextButton} onClick={onComplete}>
+            <AnimatedButton className={styles.nextButton} onClick={onComplete} variant="primary">
                 <span>I heard it!</span>
                 <ArrowRight size={24} />
-            </button>
+            </AnimatedButton>
         </div>
     );
 };

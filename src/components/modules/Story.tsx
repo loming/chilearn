@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import type { CharacterData } from '../../data/curriculum';
 import styles from './Story.module.scss';
 import { Play, RotateCcw, Check } from 'lucide-react';
+import { AnimatedButton } from '../ui/AnimatedButton';
 
 interface StoryProps {
     character: CharacterData;
@@ -100,10 +101,10 @@ export const Story: React.FC<StoryProps> = ({ character, onComplete }) => {
 
             <div className={styles.controls}>
                 {!isPlaying && !storyComplete && (
-                    <button className={styles.playButton} onClick={playStory}>
+                    <AnimatedButton className={styles.playButton} onClick={playStory} variant="primary">
                         <Play size={24} />
                         Read to Me
-                    </button>
+                    </AnimatedButton>
                 )}
 
                 {isPlaying && (
@@ -114,14 +115,14 @@ export const Story: React.FC<StoryProps> = ({ character, onComplete }) => {
 
                 {storyComplete && (
                     <div className={styles.completeControls}>
-                        <button className={styles.replayButton} onClick={handleReplay}>
+                        <AnimatedButton className={styles.replayButton} onClick={handleReplay} variant="secondary">
                             <RotateCcw size={20} />
                             Again
-                        </button>
-                        <button className={styles.nextButton} onClick={onComplete}>
+                        </AnimatedButton>
+                        <AnimatedButton className={styles.nextButton} onClick={onComplete} variant="primary">
                             <Check size={24} />
                             Next
-                        </button>
+                        </AnimatedButton>
                     </div>
                 )}
             </div>

@@ -7,6 +7,9 @@ import { Speaking } from '../components/modules/Speaking';
 import { Writing } from '../components/modules/Writing';
 import { Puzzle } from '../components/modules/Puzzle';
 import { Story } from '../components/modules/Story';
+import { PageTransition } from '../components/ui/PageTransition';
+import { AnimatedButton } from '../components/ui/AnimatedButton';
+import { useSound } from '../hooks/useSound';
 import styles from './LearningSession.module.scss';
 import { ArrowLeft } from 'lucide-react';
 
@@ -17,6 +20,7 @@ export const LearningSession: React.FC = () => {
     const { chapterId } = useParams<{ chapterId: string }>();
     const { chapters, completeChapter, addStars } = useGame();
     const navigate = useNavigate();
+    const { playCorrect } = useSound();
 
     const chapter = chapters.find(c => c.id === chapterId);
 
@@ -35,6 +39,7 @@ export const LearningSession: React.FC = () => {
     const currentCharacter = chapter.characters[charIndex];
 
     const handleLearningComplete = () => {
+        playCorrect();
         if (charIndex < chapter.characters.length - 1) {
             setCharIndex(prev => prev + 1);
             setMode('listening');
@@ -62,6 +67,7 @@ export const LearningSession: React.FC = () => {
                 setCharIndex(prev => prev + 1);
             } else {
                 // Story complete (Chapter Complete)
+                playCorrect();
                 confetti({
                     particleCount: 100,
                     spread: 70,
@@ -75,45 +81,53 @@ export const LearningSession: React.FC = () => {
     };
 
     return (
-        <div className={styles.container}>
-            <button className={styles.backButton} onClick={() => navigate('/')}>
-                <ArrowLeft size={32} color="#3A0CA3" />
-            </button>
+        <PageTransition>
+            <div className={styles.container}>
+                <div style={{ position: 'absolute', top: '20px', left: '20px', zIndex: 10 }}>
+                    <AnimatedButton
+                        variant="secondary"
+                        onClick={() => navigate('/')}
+                        style={{ padding: '0.5em', borderRadius: '50%', width: '50px', height: '50px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                    >
+                        <ArrowLeft size={24} />
+                    </AnimatedButton>
+                </div>
 
-            <div className={styles.progress}>
-                {phase === 'learning' && `Learning: Character ${charIndex + 1} / ${chapter.characters.length}`}
-                {phase === 'puzzle' && `Puzzle Challenge!`}
-                {phase === 'story' && `Story Time: ${charIndex + 1} / ${chapter.characters.length}`}
+                <div className={styles.progress}>
+                    {phase === 'learning' && `Learning: Character ${charIndex + 1} / ${chapter.characters.length}`}
+                    {phase === 'puzzle' && `Puzzle Challenge!`}
+                    {phase === 'story' && `Story Time: ${charIndex + 1} / ${chapter.characters.length}`}
+                </div>
+
+                <div className={styles.content}>
+                    {phase === 'learning' && (
+                        <>
+                            {mode === 'listening' && (
+                                <Listening
+                                    character={currentCharacter}
+                                    onComplete={handleNext}
+                                />
+                            )}
+                            {mode === 'speaking' && <Speaking character={currentCharacter} onComplete={handleNext} />}
+                            {mode === 'writing' && <Writing character={currentCharacter} onComplete={handleNext} />}
+                        </>
+                    )}
+
+                    {phase === 'puzzle' && (
+                        <Puzzle
+                            characters={chapter.characters}
+                            onComplete={handleNext}
+                        />
+                    )}
+
+                    {phase === 'story' && (
+                        <Story
+                            character={currentCharacter}
+                            onComplete={handleNext}
+                        />
+                    )}
+                </div>
             </div>
-
-            <div className={styles.content}>
-                {phase === 'learning' && (
-                    <>
-                        {mode === 'listening' && (
-                            <Listening
-                                character={currentCharacter}
-                                onComplete={handleNext}
-                            />
-                        )}
-                        {mode === 'speaking' && <Speaking character={currentCharacter} onComplete={handleNext} />}
-                        {mode === 'writing' && <Writing character={currentCharacter} onComplete={handleNext} />}
-                    </>
-                )}
-
-                {phase === 'puzzle' && (
-                    <Puzzle
-                        characters={chapter.characters}
-                        onComplete={handleNext}
-                    />
-                )}
-
-                {phase === 'story' && (
-                    <Story
-                        character={currentCharacter}
-                        onComplete={handleNext}
-                    />
-                )}
-            </div>
-        </div>
+        </PageTransition>
     );
 };
