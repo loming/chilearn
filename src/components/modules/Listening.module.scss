@@ -1,0 +1,77 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3rem;
+    width: 100%;
+    animation: popIn 0.5s ease-out;
+}
+
+.card {
+    background: white;
+    border-radius: var(--radius-lg);
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+    position: relative;
+}
+
+.character {
+    font-size: 8rem;
+    color: var(--color-primary);
+    margin-bottom: 1rem;
+    font-family: 'KaiTi', 'BiauKai', serif; // Traditional Chinese font preference
+}
+
+.pinyin {
+    font-size: 2rem;
+    color: #666;
+    margin-bottom: 0.5rem;
+}
+
+.meaning {
+    font-size: 1.5rem;
+    color: var(--color-text);
+    margin-bottom: 2rem;
+    font-weight: bold;
+}
+
+.playButton {
+    background: var(--color-secondary);
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 0 #C51B6B; // Darker shade
+    transition: transform 0.1s, box-shadow 0.1s;
+
+    &:active {
+        transform: translateY(4px);
+        box-shadow: none;
+    }
+}
+
+.nextButton {
+    background: var(--color-accent);
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+    padding: 1rem 3rem;
+    border-radius: var(--radius-lg);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: 0 6px 0 #5BB800;
+    transition: transform 0.1s, box-shadow 0.1s;
+
+    &:active {
+        transform: translateY(6px);
+        box-shadow: none;
+    }
+}

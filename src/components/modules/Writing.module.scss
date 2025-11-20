@@ -1,0 +1,97 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    width: 100%;
+    animation: popIn 0.5s ease-out;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.title {
+    font-size: 2.5rem;
+    color: var(--color-text);
+    font-family: 'KaiTi', serif;
+}
+
+.controls {
+    display: flex;
+    gap: 1rem;
+}
+
+.iconButton {
+    background: white;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.1s;
+
+    &:active {
+        transform: scale(0.95);
+    }
+}
+
+.canvasContainer {
+    position: relative;
+    background: white;
+    border-radius: var(--radius-lg);
+    padding: 1rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border: 4px dashed var(--color-primary);
+}
+
+.writerTarget {
+    cursor: crosshair;
+}
+
+.pencilIcon {
+    position: absolute;
+    bottom: -20px;
+    right: -20px;
+    background: white;
+    padding: 10px;
+    border-radius: 50%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    animation: wiggle 3s infinite ease-in-out;
+}
+
+.instruction {
+    font-size: 1.5rem;
+    color: #666;
+    font-weight: bold;
+}
+
+.hint {
+    color: var(--color-secondary);
+    font-weight: bold;
+    animation: pulse 2s infinite;
+}
+
+.nextButton {
+    background: var(--color-accent);
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+    padding: 1rem 3rem;
+    border-radius: var(--radius-lg);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: 0 6px 0 #5BB800;
+    transition: transform 0.1s, box-shadow 0.1s;
+    animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+    &:active {
+        transform: translateY(6px);
+        box-shadow: none;
+    }
+}

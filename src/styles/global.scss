@@ -1,0 +1,42 @@
+:root {
+  --color-primary: #4CC9F0;
+  --color-secondary: #F72585;
+  --color-accent: #70E000;
+  --color-warning: #FFD60A;
+  --color-background: #CAF0F8;
+  --color-text: #3A0CA3;
+  --color-white: #FFFFFF;
+  
+  --font-main: 'Nunito', 'Rounded Mplus 1c', sans-serif;
+  
+  --radius-lg: 24px;
+  --radius-md: 16px;
+  --radius-sm: 8px;
+  
+  --shadow-pop: 0px 8px 0px rgba(0,0,0,0.15);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-main);
+  background-color: var(--color-background);
+  color: var(--color-text);
+  overflow-x: hidden;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  outline: none;
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+}
