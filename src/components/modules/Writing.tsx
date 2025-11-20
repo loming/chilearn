@@ -26,7 +26,7 @@ export const Writing: React.FC<WritingProps> = ({ character, onComplete }) => {
                 padding: 20,
                 showOutline: true,
                 strokeAnimationSpeed: 1,
-                delayBetweenStrokes: 200,
+                delayBetweenStrokes: 500,
                 radicalColor: '#F72585',
                 strokeColor: '#4CC9F0',
                 outlineColor: '#ddd',
@@ -37,7 +37,7 @@ export const Writing: React.FC<WritingProps> = ({ character, onComplete }) => {
                 highlightCompleteColor: '#70E000',
             });
 
-            startQuiz();
+            animate();
         }
     }, [character]);
 

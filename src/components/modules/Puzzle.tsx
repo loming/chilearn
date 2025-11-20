@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { CharacterData } from '../../data/curriculum';
 import styles from './Puzzle.module.scss';
@@ -12,89 +12,124 @@ interface PuzzleProps {
 interface DraggableChar extends CharacterData {
     id: string;
     isPlaced: boolean;
+    x: number;
+    y: number;
 }
 
 export const Puzzle: React.FC<PuzzleProps> = ({ characters, onComplete }) => {
     const [items, setItems] = useState<DraggableChar[]>([]);
     const [slots, setSlots] = useState<CharacterData[]>([]);
-    const [gameStarted, setGameStarted] = useState(false);
+    const containerRef = useRef<HTMLDivElement>(null);
+    const slotRefs = useRef<(HTMLDivElement | null)[]>([]);
 
     // Initialize game
     useEffect(() => {
-        const initialItems = characters.map((char, index) => ({
-            ...char,
-            id: `char-${index}`,
-            isPlaced: false
-        }));
-        setItems(initialItems);
         setSlots(characters);
 
-        // Play all sounds initially
-        playAllSounds(characters);
+        // Delay slightly to ensure container dimensions are available
+        const timer = setTimeout(() => {
+            initializeItems();
+            playAllSounds(characters);
+        }, 100);
+
+        return () => clearTimeout(timer);
     }, [characters]);
 
-    const playAllSounds = async (chars: CharacterData[]) => {
-        for (const char of chars) {
-            await playSound(char.char);
-            await new Promise(resolve => setTimeout(resolve, 500));
-        }
-        scatterItems();
+    const initializeItems = () => {
+        if (!containerRef.current) return;
+
+        const { width, height } = containerRef.current.getBoundingClientRect();
+        const padding = 50;
+        const slotAreaHeight = 200; // Approximate height of the top slot area
+
+        const newItems = characters.map((char, index) => ({
+            ...char,
+            id: `char-${index}`,
+            isPlaced: false,
+            x: Math.random() * (width - 100 - padding * 2) + padding,
+            y: Math.random() * (height - slotAreaHeight - 100 - padding) + slotAreaHeight
+        }));
+
+        setItems(newItems);
     };
 
-    const playSound = (text: string) => {
-        return new Promise<void>((resolve) => {
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.lang = 'zh-CN';
-            utterance.onend = () => resolve();
+    const playAllSounds = (chars: CharacterData[]) => {
+        // Cancel any existing speech
+        window.speechSynthesis.cancel();
+
+        chars.forEach(char => {
+            const utterance = new SpeechSynthesisUtterance(char.char);
+            utterance.lang = 'zh-HK';
+            utterance.rate = 1.2; // Slightly faster
             window.speechSynthesis.speak(utterance);
         });
     };
 
-    const scatterItems = () => {
-        setGameStarted(true);
-        setItems(prev => {
-            const newItems = [...prev];
-            // Fisher-Yates shuffle
-            for (let i = newItems.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [newItems[i], newItems[j]] = [newItems[j], newItems[i]];
-            }
-            return newItems;
-        });
-    };
-
     const handleDragStart = (char: string) => {
-        playSound(char);
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(char);
+        utterance.lang = 'zh-HK';
+        window.speechSynthesis.speak(utterance);
     };
 
     const handleDragEnd = (item: DraggableChar, info: any) => {
-        const point = info.point;
-        const element = document.elementFromPoint(point.x, point.y);
-        const slotId = element?.getAttribute('data-slot-id');
+        const dropPoint = info.point;
+        let closestSlotIndex = -1;
+        let minDistance = Infinity;
+        const threshold = 100; // Snap distance threshold
 
-        if (slotId === item.char) {
-            // Correct match!
-            setItems(prev => prev.map(i =>
-                i.id === item.id ? { ...i, isPlaced: true } : i
-            ));
+        // Find closest slot
+        slotRefs.current.forEach((slotRef, index) => {
+            if (slotRef) {
+                const rect = slotRef.getBoundingClientRect();
+                const slotCenter = {
+                    x: rect.left + rect.width / 2,
+                    y: rect.top + rect.height / 2
+                };
+                const distance = Math.sqrt(
+                    Math.pow(dropPoint.x - slotCenter.x, 2) +
+                    Math.pow(dropPoint.y - slotCenter.y, 2)
+                );
 
-            // Check win condition
-            const allPlaced = items.every(i => i.id === item.id ? true : i.isPlaced);
-            if (allPlaced) {
-                confetti({
-                    particleCount: 100,
-                    spread: 70,
-                    origin: { y: 0.6 }
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    closestSlotIndex = index;
+                }
+            }
+        });
+
+        if (minDistance < threshold && closestSlotIndex !== -1) {
+            const targetSlot = slots[closestSlotIndex];
+
+            if (targetSlot.char === item.char) {
+                // Correct match!
+                setItems(prev => {
+                    const updatedItems = prev.map(i =>
+                        i.id === item.id ? { ...i, isPlaced: true } : i
+                    );
+
+                    // Check win condition
+                    const allPlaced = updatedItems.every(i => i.isPlaced);
+                    if (allPlaced) {
+                        confetti({
+                            particleCount: 100,
+                            spread: 70,
+                            origin: { y: 0.6 }
+                        });
+                        setTimeout(onComplete, 2000);
+                    }
+                    return updatedItems;
                 });
-                setTimeout(onComplete, 2000);
             }
         }
     };
 
     return (
-        <div className={styles.container}>
-            <h2>Puzzle Mode</h2>
-            <p>Listen and drag the characters to the correct boxes!</p>
+        <div className={styles.container} ref={containerRef}>
+            <div className={styles.header}>
+                <h2>Puzzle Mode</h2>
+                <p>Drag the characters to the correct boxes!</p>
+            </div>
 
             <div className={styles.slotsContainer}>
                 {slots.map((char, index) => (
@@ -102,13 +137,14 @@ export const Puzzle: React.FC<PuzzleProps> = ({ characters, onComplete }) => {
                         key={`slot-${index}`}
                         className={styles.slot}
                         data-slot-id={char.char}
+                        ref={el => { slotRefs.current[index] = el }}
                     >
                         <span className={styles.slotHint}>{char.pinyin}</span>
                         {items.find(i => i.char === char.char && i.isPlaced) && (
                             <motion.div
-                                initial={{ scale: 0 }}
-                                animate={{ scale: 1 }}
+                                layoutId={`char-${char.char}`}
                                 className={styles.placedChar}
+                                transition={{ type: "spring", stiffness: 300, damping: 30 }}
                             >
                                 {char.char}
                             </motion.div>
@@ -119,14 +155,18 @@ export const Puzzle: React.FC<PuzzleProps> = ({ characters, onComplete }) => {
 
             <div className={styles.piecesContainer}>
                 <AnimatePresence>
-                    {gameStarted && items.map((item) => (
+                    {items.map((item) => (
                         !item.isPlaced && (
                             <motion.div
                                 key={item.id}
+                                layoutId={`char-${item.char}`}
                                 className={styles.piece}
                                 drag
-                                dragConstraints={{ left: -300, right: 300, top: -300, bottom: 300 }}
-                                whileHover={{ scale: 1.1 }}
+                                dragMomentum={false}
+                                initial={{ x: item.x, y: item.y, scale: 0 }}
+                                animate={{ x: item.x, y: item.y, scale: 1 }}
+                                exit={{ scale: 0 }}
+                                whileHover={{ scale: 1.1, zIndex: 100 }}
                                 whileDrag={{ scale: 1.2, zIndex: 100 }}
                                 onDragStart={() => handleDragStart(item.char)}
                                 onDragEnd={(_, info) => handleDragEnd(item, info)}
@@ -137,12 +177,6 @@ export const Puzzle: React.FC<PuzzleProps> = ({ characters, onComplete }) => {
                     ))}
                 </AnimatePresence>
             </div>
-
-            {!gameStarted && (
-                <div className={styles.overlay}>
-                    <p>Listen carefully...</p>
-                </div>
-            )}
         </div>
     );
 };

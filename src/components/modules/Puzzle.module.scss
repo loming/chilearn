@@ -54,22 +54,26 @@
     align-items: center;
     justify-content: center;
     font-size: 2.5rem;
-    background-color: #4CC9F0;
+    background-color: #70E000;
+    /* Green for success */
     color: white;
     border-radius: 12px;
     font-family: "Ma Shan Zheng", cursive;
 }
 
 .piecesContainer {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-    justify-content: center;
-    min-height: 100px;
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
+    height: 100%;
+    pointer-events: none;
 }
 
 .piece {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 80px;
     height: 80px;
     background-color: #F72585;
@@ -83,6 +87,7 @@
     cursor: grab;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     user-select: none;
+    pointer-events: auto;
 
     &:active {
         cursor: grabbing;

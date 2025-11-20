@@ -38,6 +38,12 @@ export const Speaking: React.FC<SpeakingProps> = ({ character, onComplete }) => 
             recognitionRef.current.onend = () => {
                 setIsListening(false);
             };
+
+            // Auto-listen with a slight delay
+            const timer = setTimeout(() => {
+                startListening();
+            }, 500);
+            return () => clearTimeout(timer);
         } else {
             console.warn('Speech recognition not supported');
         }
