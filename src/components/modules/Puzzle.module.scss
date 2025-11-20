@@ -1,0 +1,106 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    padding: 2rem;
+    position: relative;
+
+    h2 {
+        color: #3A0CA3;
+        margin-bottom: 0.5rem;
+    }
+
+    p {
+        color: #666;
+        margin-bottom: 2rem;
+    }
+}
+
+.slotsContainer {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 4rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.slot {
+    width: 80px;
+    height: 80px;
+    border: 3px dashed #ccc;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    background-color: rgba(255, 255, 255, 0.5);
+
+    .slotHint {
+        position: absolute;
+        bottom: -25px;
+        font-size: 0.9rem;
+        color: #888;
+        font-weight: bold;
+    }
+}
+
+.placedChar {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    background-color: #4CC9F0;
+    color: white;
+    border-radius: 12px;
+    font-family: "Ma Shan Zheng", cursive;
+}
+
+.piecesContainer {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    min-height: 100px;
+    width: 100%;
+}
+
+.piece {
+    width: 80px;
+    height: 80px;
+    background-color: #F72585;
+    color: white;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    font-family: "Ma Shan Zheng", cursive;
+    cursor: grab;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    user-select: none;
+
+    &:active {
+        cursor: grabbing;
+    }
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: #3A0CA3;
+    z-index: 1000;
+    backdrop-filter: blur(2px);
+}
