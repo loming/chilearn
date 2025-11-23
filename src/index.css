@@ -32,12 +32,12 @@
   color: var(--color-text);
 
   /* Fun Background Pattern */
-  background-color: var(--color-background);
-  background-image:
+  /* background-color: var(--color-background); */
+  /* background-image:
     radial-gradient(circle at 10% 20%, rgba(255, 107, 107, 0.1) 0%, transparent 20%),
     radial-gradient(circle at 90% 80%, rgba(78, 205, 196, 0.1) 0%, transparent 20%),
-    radial-gradient(circle at 50% 50%, rgba(255, 230, 109, 0.1) 0%, transparent 30%);
-  background-attachment: fixed;
+    radial-gradient(circle at 50% 50%, rgba(255, 230, 109, 0.1) 0%, transparent 30%); */
+  /* background-attachment: fixed; */
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;

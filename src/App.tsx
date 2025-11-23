@@ -35,11 +35,14 @@ const AnimatedRoutes = () => {
   );
 };
 
+import { CloudBackground } from './components/CloudBackground'
+
 function App() {
   return (
     <SoundProvider>
       <GameProvider>
         <Router>
+          <CloudBackground />
           <MusicToggle />
           <AnimatedRoutes />
         </Router>
