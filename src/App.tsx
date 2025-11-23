@@ -4,8 +4,11 @@ import { Layout } from './components/Layout';
 import { ChapterSelect } from './pages/ChapterSelect';
 import { LearningSession } from './pages/LearningSession';
 
+import { CloudBackground } from './components/CloudBackground'
+
 function App() {
   return (
+<<<<<<< HEAD
     <GameProvider>
       <Router>
         <Layout>
@@ -18,6 +21,18 @@ function App() {
       </Router>
     </GameProvider>
   );
+=======
+    <SoundProvider>
+      <GameProvider>
+        <Router>
+          <CloudBackground />
+          <MusicToggle />
+          <AnimatedRoutes />
+        </Router>
+      </GameProvider>
+    </SoundProvider>
+  )
+>>>>>>> b0c222b (Animated cloud background and new image assets)
 }
 
 export default App;
